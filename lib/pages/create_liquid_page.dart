@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class CreateLiquidPage extends StatefulWidget {
   const CreateLiquidPage({Key? key}) : super(key: key);
@@ -13,7 +11,15 @@ class _CreateLiquidPageState extends State<CreateLiquidPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+        title: Text(
+          'Mix',
+          style: Theme.of(context).textTheme.headline6,
+        ),
+      ),
       body: ListView(children: const [
         LiquidCard(
           cardTitle: 'First Liquid',

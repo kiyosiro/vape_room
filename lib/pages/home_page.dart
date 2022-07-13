@@ -12,51 +12,41 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool isAlreadyMix = true;
+  int _selectedIndex = 0;
+
+  List<Widget> pages = <Widget>[
+    const CreateLiquidPage(),
+    const ArchivePage(),
+    const ArchivePage(),
+  ];
+
+  void _onNaviItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              widget.appName,
-              style: Theme.of(context).textTheme.headline3,
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const CreateLiquidPage()));
-              },
-              child: const Text('Mixing'),
-            ),
-            ElevatedButton(
-              onPressed: isAlreadyMix == false
-                  ? null
-                  : () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const ArchivePage()));
-                    },
-              child: const Text('Recipe Book'),
-            ),
-            ElevatedButton(
-              onPressed: isAlreadyMix == false
-                  ? null
-                  : () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const ArchivePage()));
-                    },
-              child: const Text('My tools'),
-            )
-          ],
-        ),
+      body: pages[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onNaviItemTapped,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.vaccines),
+            label: 'Mix',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.import_contacts),
+            label: 'Recipe Book',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_bag),
+            label: 'Items',
+          )
+        ],
       ),
     );
   }

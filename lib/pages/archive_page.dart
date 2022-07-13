@@ -30,7 +30,13 @@ class _ArchivePageState extends State<ArchivePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Archive'),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+        title: Text(
+          'Recipe Book',
+          style: Theme.of(context).textTheme.headline6,
+        ),
       ),
       body: ListView(
         children: mixedLiquidsToTiles(mixedLiquids),
