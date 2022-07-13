@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class MixedLiquid {
   String name;
   Liquid liqA;

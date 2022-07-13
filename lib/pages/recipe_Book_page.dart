@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:vape_room/models/liquid.dart';
 
-class ArchivePage extends StatefulWidget {
-  const ArchivePage({Key? key}) : super(key: key);
+class RecipeBookPage extends StatefulWidget {
+  const RecipeBookPage({Key? key}) : super(key: key);
 
   @override
-  State<ArchivePage> createState() => _ArchivePageState();
+  State<RecipeBookPage> createState() => _RecipeBookPageState();
 }
 
-class _ArchivePageState extends State<ArchivePage> {
+class _RecipeBookPageState extends State<RecipeBookPage> {
   @override
   Widget build(BuildContext context) {
     final List<MixedLiquid> mixedLiquids = [

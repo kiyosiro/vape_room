@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class CreateLiquidPage extends StatefulWidget {
-  const CreateLiquidPage({Key? key}) : super(key: key);
+class MixPage extends StatefulWidget {
+  const MixPage({Key? key}) : super(key: key);
 
   @override
-  State<CreateLiquidPage> createState() => _CreateLiquidPageState();
+  State<MixPage> createState() => _MixPageState();
 }
 
-class _CreateLiquidPageState extends State<CreateLiquidPage> {
+class _MixPageState extends State<MixPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

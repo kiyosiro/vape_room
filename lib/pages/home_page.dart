@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:vape_room/pages/archive_page.dart';
-import 'package:vape_room/pages/create_liquid_page.dart';
+import 'package:vape_room/pages/mix_page.dart';
+import 'Recipe_Book_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.appName}) : super(key: key);
@@ -15,9 +15,9 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
   List<Widget> pages = <Widget>[
-    const CreateLiquidPage(),
-    const ArchivePage(),
-    const ArchivePage(),
+    const MixPage(),
+    const RecipeBookPage(),
+    const RecipeBookPage(),
   ];
 
   void _onNaviItemTapped(int index) {
