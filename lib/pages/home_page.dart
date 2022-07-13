@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vape_room/pages/archive_page.dart';
+import 'package:vape_room/pages/create_liquid_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.appName}) : super(key: key);
@@ -24,7 +25,12 @@ class _HomePageState extends State<HomePage> {
               style: Theme.of(context).textTheme.headline3,
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const CreateLiquidPage()));
+              },
               child: const Text('new'),
             ),
             ElevatedButton(
