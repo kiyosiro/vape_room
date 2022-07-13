@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vape_room/pages/archive_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.appName}) : super(key: key);
@@ -27,8 +28,15 @@ class _HomePageState extends State<HomePage> {
               child: const Text('new'),
             ),
             ElevatedButton(
-              onPressed: isAlreadyMix == false ? null : () {},
-              child: const Text('archieve'),
+              onPressed: isAlreadyMix == false
+                  ? null
+                  : () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const ArchivePage()));
+                    },
+              child: const Text('archive'),
             )
           ],
         ),
