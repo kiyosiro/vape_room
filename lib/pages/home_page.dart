@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
                     MaterialPageRoute(
                         builder: (context) => const CreateLiquidPage()));
               },
-              child: const Text('new'),
+              child: const Text('Mixing'),
             ),
             ElevatedButton(
               onPressed: isAlreadyMix == false
@@ -42,7 +42,18 @@ class _HomePageState extends State<HomePage> {
                           MaterialPageRoute(
                               builder: (context) => const ArchivePage()));
                     },
-              child: const Text('archive'),
+              child: const Text('Recipe Book'),
+            ),
+            ElevatedButton(
+              onPressed: isAlreadyMix == false
+                  ? null
+                  : () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const ArchivePage()));
+                    },
+              child: const Text('My tools'),
             )
           ],
         ),
