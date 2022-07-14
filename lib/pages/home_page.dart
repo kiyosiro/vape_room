@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.import_contacts),
-            label: 'Recipe Book',
+            label: 'Myレシピ',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_bag),

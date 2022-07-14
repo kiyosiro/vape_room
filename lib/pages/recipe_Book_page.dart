@@ -34,7 +34,7 @@ class _RecipeBookPageState extends State<RecipeBookPage> {
         backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
         title: Text(
-          'Recipe Book',
+          'My Recipe',
           style: Theme.of(context).textTheme.headline6,
         ),
       ),
