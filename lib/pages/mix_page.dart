@@ -29,8 +29,9 @@ class _MixPageState extends State<MixPage> {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
+                  Icon(Icons.science_outlined),
                   Icon(Icons.local_drink),
-                  Icon(Icons.opacity),
+                  Icon(Icons.local_drink),
                 ],
               ),
               Row(
@@ -38,7 +39,7 @@ class _MixPageState extends State<MixPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
                   Icon(Icons.local_drink),
-                  Icon(Icons.colorize),
+                  Icon(Icons.local_drink),
                 ],
               ),
             ],
@@ -62,53 +63,128 @@ class TabBarViewA extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(children: const [
-      ListTile(
-        dense: true,
-        contentPadding: EdgeInsets.symmetric(vertical: 18, horizontal: 12),
-        title: Text('作成したいリキッドの容量とニコチン濃度が決まっている場合に使用し、それぞれのリキッドの必要な量を計算します。'),
-        subtitle: Text('* 必須項目'),
-      ),
-      Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Card(
-          child: ListTile(
-            dense: true,
-            contentPadding: EdgeInsets.all(12),
-            title: LiqCardTitle(
-              cardTitle: '作成したいリキッド',
-              icon: Icon(
-                Icons.local_drink,
+    final Liquid resultLiq = goastLiqMixed;
+
+    return ListView(
+      children: [
+        const ListTile(
+          dense: true,
+          contentPadding: EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+          title: Text(
+              '空の詰め替えボトルに２つのリキッドを混ぜ合わせて入れる場合のそれぞれのリキッドの必要な量を計算します。作成したい容量とニコチン濃度が決まっている必要があります。'),
+          subtitle: Text('* 必須項目'),
+        ),
+        const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Card(
+            child: ListTile(
+              dense: true,
+              contentPadding: EdgeInsets.all(12),
+              title: LiqCardTitle(
+                cardTitle: '作成したいリキッド',
+                icon: Icon(
+                  Icons.science,
+                  color: Colors.purple,
+                ),
+              ),
+              subtitle: AmoutAndNicoFields(),
+            ),
+          ),
+        ),
+        const LiqCard(
+          cardTitle: 'First Liquid',
+          flavorHint: 'ex) peach flavor',
+          nicotineHint: '0',
+          pgHint: '70',
+          vgHint: '30',
+          icon: Icon(
+            Icons.water_drop,
+            color: Colors.red,
+          ),
+        ),
+        const LiqCard(
+          cardTitle: 'Second Liquid',
+          flavorHint: 'ex) nicotin liquid',
+          nicotineHint: '10',
+          pgHint: '50',
+          vgHint: '50',
+          icon: Icon(
+            Icons.water_drop,
+            color: Colors.blue,
+          ),
+        ),
+        ResultCard(resultLiq: resultLiq)
+      ],
+    );
+  }
+}
+
+class ResultCard extends StatelessWidget {
+  const ResultCard({
+    Key? key,
+    required this.resultLiq,
+  }) : super(key: key);
+
+  final Liquid resultLiq;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+      child: Card(
+        elevation: 6,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Text(
+                'Result',
+                style: Theme.of(context).textTheme.headline6,
+              ),
+            ),
+            resultLiq.liqA != null
+                ? LiqInfo(
+                    liq: resultLiq.liqA!,
+                    title: '注入するリキッド',
+                    icon: const Icon(
+                      Icons.colorize,
+                      color: Colors.red,
+                    ),
+                  )
+                : const Text('必須項目が入力されていません'),
+            Center(
+                child: Text(
+              '+',
+              style: TextStyle(color: Theme.of(context).disabledColor),
+            )),
+            resultLiq.liqB != null
+                ? LiqInfo(
+                    liq: resultLiq.liqB!,
+                    title: 'ボトルに入っているリキッド',
+                    icon: const Icon(
+                      Icons.local_drink,
+                      color: Colors.blue,
+                    ),
+                  )
+                : const Text('必須項目が入力されていません'),
+            Center(
+                child: Text(
+              '||',
+              style: TextStyle(color: Theme.of(context).disabledColor),
+            )),
+            LiqInfo(
+              liq: resultLiq,
+              title: '作成されるリキッド',
+              icon: const Icon(
+                Icons.science,
                 color: Colors.purple,
               ),
             ),
-            subtitle: AmoutAndNicoFields(),
-          ),
+          ],
         ),
       ),
-      LiqCard(
-        cardTitle: 'First Liquid',
-        flavorHint: 'ex) peach flavor',
-        nicotineHint: '0',
-        pgHint: '70',
-        vgHint: '30',
-        icon: Icon(
-          Icons.water_drop,
-          color: Colors.red,
-        ),
-      ),
-      LiqCard(
-        cardTitle: 'Second Liquid',
-        flavorHint: 'ex) nicotin liquid',
-        nicotineHint: '10',
-        pgHint: '50',
-        vgHint: '50',
-        icon: Icon(
-          Icons.water_drop,
-          color: Colors.blue,
-        ),
-      ),
-    ]);
+    );
   }
 }
 
@@ -152,14 +228,13 @@ class TabBarViewB extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final MixedLiquid resultLiq = getGoastMixedLiq();
-
+    final Liquid resultLiq = goastLiqMixed;
     return ListView(children: [
       const ListTile(
         dense: true,
         contentPadding: EdgeInsets.symmetric(vertical: 18, horizontal: 12),
         title: Text(
-            '作成したい容量は決まっておらずニコチン濃度のみ決まっている場合に使用し、中身の入っている片方のボトルにもう一方のリキッドを注入する際の注入リキッド量を計算します。'),
+            '中身の入っている片方のボトルにもう一方のリキッドを注入する場合の注入リキッド量を計算します。作成したいニコチン濃度が決まっている必要があります。'),
         subtitle: Text('* 必須項目'),
       ),
       const Padding(
@@ -171,7 +246,7 @@ class TabBarViewB extends StatelessWidget {
             title: LiqCardTitle(
               cardTitle: '作成したいリキッド',
               icon: Icon(
-                Icons.local_drink,
+                Icons.science,
                 color: Colors.purple,
               ),
             ),
@@ -204,35 +279,12 @@ class TabBarViewB extends StatelessWidget {
         vgHint: '50',
         amountHint: 200,
         icon: Icon(
-          Icons.water_drop,
+          Icons.local_drink,
           color: Colors.blue,
         ),
       ),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
-        child: Card(
-          elevation: 6,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: LiqCardTitle(
-                    cardTitle: 'Recipe',
-                    icon: const Icon(
-                      Icons.science,
-                      color: Colors.orangeAccent,
-                    ),
-                    titleStyle: Theme.of(context).textTheme.subtitle1,
-                  )),
-              LiqInfo(
-                liq: resultLiq,
-                title: '作成されたリキッド',
-              ),
-            ],
-          ),
-        ),
-      )
+      const Divider(),
+      ResultCard(resultLiq: resultLiq)
     ]);
   }
 }
@@ -242,31 +294,42 @@ class LiqInfo extends StatelessWidget {
     Key? key,
     required this.liq,
     required this.title,
+    required this.icon,
   }) : super(key: key);
 
-  final MixedLiquid liq;
+  final Liquid liq;
   final String title;
+  final Icon icon;
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: const EdgeInsets.all(12),
-      title: LiqCardTitle(cardTitle: title, icon: const Icon(Icons.science)),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const TextField(
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Flavor',
-              hintText: 'New liquid',
+    return Padding(
+      padding: const EdgeInsets.all(4),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black12),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: ListTile(
+          contentPadding: const EdgeInsets.all(12),
+          title: LiqCardTitle(cardTitle: title, icon: icon),
+          subtitle: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Flavor : ${liq.flavor ?? 'No name Flavor'}'),
+                Text(
+                    'Origin Liquids : ${liq.liqA?.flavor ?? '-'} + ${liq.liqB?.flavor ?? '-'}'),
+                Text('Amount : ${liq.amount} ml'),
+                Text('Nico Raito : ${liq.nicoRaito} %'),
+                Text('PG : ${liq.pgRaito == null ? '-' : liq.pgRaito!} %'),
+                Text(
+                    'VG : ${liq.pgRaito == null ? '-' : 100 - liq.pgRaito!} %'),
+              ],
             ),
           ),
-          Text('Amount : ${liq.amount}'),
-          Text('Nico Raito : ${liq.nicoRaito}'),
-          Text('PGRaito : ${liq.pgRaito == null ? '-' : liq.pgRaito!}'),
-          Text('VGRaito : ${liq.pgRaito == null ? '-' : 100 - liq.pgRaito!}}')
-        ],
+        ),
       ),
     );
   }
@@ -392,11 +455,13 @@ class LiqCardTitle extends StatelessWidget {
     required this.cardTitle,
     required this.icon,
     this.titleStyle,
+    this.showSaveButton,
   }) : super(key: key);
 
   final String cardTitle;
   final Icon icon;
   final TextStyle? titleStyle;
+  final bool? showSaveButton;
 
   @override
   Widget build(BuildContext context) {
@@ -408,16 +473,18 @@ class LiqCardTitle extends StatelessWidget {
           style: titleStyle,
         ),
         const Spacer(),
-        TextButton(
-          onPressed: () {},
-          style: ButtonStyle(
-            padding: MaterialStateProperty.all(const EdgeInsets.all(4)),
-            minimumSize: MaterialStateProperty.all(Size.zero),
-            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        if (showSaveButton == null || showSaveButton == true)
+          TextButton(
+            onPressed: () {},
+            style: ButtonStyle(
+              padding: MaterialStateProperty.all(const EdgeInsets.all(4)),
+              minimumSize: MaterialStateProperty.all(Size.zero),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            child: const Text('保存'),
           ),
-          child: const Text('保存'),
-        ),
-        HelpButton(onPressed: () {}),
+        if (showSaveButton == null || showSaveButton == true)
+          HelpButton(onPressed: () {}),
       ],
     );
   }

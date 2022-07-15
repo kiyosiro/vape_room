@@ -11,21 +11,9 @@ class RecipeBookPage extends StatefulWidget {
 class _RecipeBookPageState extends State<RecipeBookPage> {
   @override
   Widget build(BuildContext context) {
-    final List<MixedLiquid> mixedLiquids = [
-      MixedLiquid(
-        name: 'NicoPeach',
-        liqA: Liquid(name: 'peach', nicoRatio: 0),
-        liqB: Liquid(name: 'nicoNonFlaver', nicoRatio: 0.1),
-        amount: 100,
-        nicoRaito: 0.1,
-      ),
-      MixedLiquid(
-        name: 'NicoEnergyDrink',
-        liqA: Liquid(name: 'EnergyDrink', nicoRatio: 0),
-        liqB: Liquid(name: 'nicoNonFlaver', nicoRatio: 0.1),
-        amount: 200,
-        nicoRaito: 0.1,
-      ),
+    final List<Liquid> mixedLiquids = [
+      goastLiqMixed,
+      goastLiqOrigin,
     ];
 
     return Scaffold(
@@ -44,26 +32,14 @@ class _RecipeBookPageState extends State<RecipeBookPage> {
     );
   }
 
-  List<Widget> mixedLiquidsToTiles(List<MixedLiquid> mixedLiquids) {
+  List<Widget> mixedLiquidsToTiles(List<Liquid> mixedLiquids) {
     final List<Widget> tiles = <Widget>[];
 
-    for (MixedLiquid mixedLiquid in mixedLiquids) {
+    for (Liquid mixedLiquid in mixedLiquids) {
       tiles.add(
         ListTile(
-          title: Text(mixedLiquid.name),
+          title: Text(mixedLiquid.flavor ?? 'No name flavor'),
           isThreeLine: true,
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Total Amount: ${mixedLiquid.amount}ml'),
-              Text('Nico raito: ${mixedLiquid.nicoRaito * 100}%'),
-              Text('LiquidA: ${mixedLiquid.liqA.name}'),
-              Text('  Amount: ${mixedLiquid.getLiqAAmount()}ml'),
-              Text('LiquidB: ${mixedLiquid.liqB.name}'),
-              Text(
-                  '  Amount: ${mixedLiquid.amount - mixedLiquid.getLiqAAmount()}ml')
-            ],
-          ),
           onTap: () {},
           leading: const Icon(Icons.local_drink),
         ),
