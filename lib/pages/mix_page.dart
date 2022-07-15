@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:vape_room/models/liquid.dart';
+import 'package:vape_room/widgets/help_button.dart';
 
 class MixPage extends StatefulWidget {
   const MixPage({Key? key}) : super(key: key);
@@ -60,51 +62,51 @@ class TabBarViewA extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(children: [
-      const ListTile(
+    return ListView(children: const [
+      ListTile(
         dense: true,
         contentPadding: EdgeInsets.symmetric(vertical: 18, horizontal: 12),
         title: Text('作成したいリキッドの容量とニコチン濃度が決まっている場合に使用し、それぞれのリキッドの必要な量を計算します。'),
+        subtitle: Text('* 必須項目'),
       ),
       Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(8.0),
         child: Card(
           child: ListTile(
             dense: true,
-            contentPadding: const EdgeInsets.all(12),
-            title: Row(
-              children: [
-                const Icon(
-                  Icons.local_drink,
-                  color: Colors.deepPurple,
-                ),
-                const Text('作成したいリキッド'),
-                const Spacer(),
-                TextButton(
-                  onPressed: () {},
-                  child: const Text('保存'),
-                ),
-              ],
+            contentPadding: EdgeInsets.all(12),
+            title: LiqCardTitle(
+              cardTitle: '作成したいリキッド',
+              icon: Icon(
+                Icons.local_drink,
+                color: Colors.purple,
+              ),
             ),
-            subtitle: const AmoutAndNicoFields(),
+            subtitle: AmoutAndNicoFields(),
           ),
         ),
       ),
-      const LiquidCard(
+      LiqCard(
         cardTitle: 'First Liquid',
         flavorHint: 'ex) peach flavor',
         nicotineHint: '0',
         pgHint: '70',
         vgHint: '30',
-        iconColor: Colors.red,
+        icon: Icon(
+          Icons.water_drop,
+          color: Colors.red,
+        ),
       ),
-      const LiquidCard(
+      LiqCard(
         cardTitle: 'Second Liquid',
         flavorHint: 'ex) nicotin liquid',
         nicotineHint: '10',
         pgHint: '50',
         vgHint: '50',
-        iconColor: Colors.blue,
+        icon: Icon(
+          Icons.water_drop,
+          color: Colors.blue,
+        ),
       ),
     ]);
   }
@@ -123,7 +125,7 @@ class AmoutAndNicoFields extends StatelessWidget {
           child: TextField(
             decoration: InputDecoration(
               border: OutlineInputBorder(),
-              labelText: '容量/ml',
+              labelText: '* 容量/ml',
               hintText: '200',
             ),
           ),
@@ -133,7 +135,7 @@ class AmoutAndNicoFields extends StatelessWidget {
           child: TextField(
             decoration: InputDecoration(
               border: OutlineInputBorder(),
-              labelText: 'Nicotine/%',
+              labelText: '* Nicotine/%',
               hintText: '15',
             ),
           ),
@@ -150,71 +152,143 @@ class TabBarViewB extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(children: const [
-      ListTile(
+    final MixedLiquid resultLiq = getGoastMixedLiq();
+
+    return ListView(children: [
+      const ListTile(
         dense: true,
         contentPadding: EdgeInsets.symmetric(vertical: 18, horizontal: 12),
         title: Text(
-            '作成したい容量は決まっておらずニコチン濃度のみ決まっている際に使用し、中身の入っている片方のボトルにもう一方のリキッドを注入する際の注入リキッド量を計算します。'),
+            '作成したい容量は決まっておらずニコチン濃度のみ決まっている場合に使用し、中身の入っている片方のボトルにもう一方のリキッドを注入する際の注入リキッド量を計算します。'),
+        subtitle: Text('* 必須項目'),
       ),
-      Padding(
+      const Padding(
         padding: EdgeInsets.all(8.0),
         child: Card(
           child: ListTile(
             dense: true,
             contentPadding: EdgeInsets.all(12),
-            title: LiquidCardTitle(
+            title: LiqCardTitle(
               cardTitle: '作成したいリキッド',
-              iconColor: Colors.purple,
+              icon: Icon(
+                Icons.local_drink,
+                color: Colors.purple,
+              ),
             ),
             subtitle: TextField(
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: 'Nicotine/%',
+                labelText: '* Nicotine/%',
                 hintText: '15',
               ),
             ),
           ),
         ),
       ),
-      LiquidCard(
+      const LiqCard(
         cardTitle: '注入するリキッド',
         flavorHint: 'nicotin liquid',
         nicotineHint: '10',
         pgHint: '70',
         vgHint: '30',
-        iconColor: Colors.red,
+        icon: Icon(
+          Icons.colorize,
+          color: Colors.red,
+        ),
       ),
-      LiquidCard(
+      const LiqCard(
         cardTitle: 'ボトルに入っているリキッド',
         flavorHint: 'peach liquid',
         nicotineHint: '0',
         pgHint: '50',
         vgHint: '50',
-        iconColor: Colors.blue,
         amountHint: 200,
+        icon: Icon(
+          Icons.water_drop,
+          color: Colors.blue,
+        ),
       ),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+        child: Card(
+          elevation: 6,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: LiqCardTitle(
+                    cardTitle: 'Recipe',
+                    icon: const Icon(
+                      Icons.science,
+                      color: Colors.orangeAccent,
+                    ),
+                    titleStyle: Theme.of(context).textTheme.subtitle1,
+                  )),
+              LiqInfo(
+                liq: resultLiq,
+                title: '作成されたリキッド',
+              ),
+            ],
+          ),
+        ),
+      )
     ]);
   }
 }
 
-class LiquidCard extends StatelessWidget {
+class LiqInfo extends StatelessWidget {
+  const LiqInfo({
+    Key? key,
+    required this.liq,
+    required this.title,
+  }) : super(key: key);
+
+  final MixedLiquid liq;
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      contentPadding: const EdgeInsets.all(12),
+      title: LiqCardTitle(cardTitle: title, icon: const Icon(Icons.science)),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const TextField(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Flavor',
+              hintText: 'New liquid',
+            ),
+          ),
+          Text('Amount : ${liq.amount}'),
+          Text('Nico Raito : ${liq.nicoRaito}'),
+          Text('PGRaito : ${liq.pgRaito == null ? '-' : liq.pgRaito!}'),
+          Text('VGRaito : ${liq.pgRaito == null ? '-' : 100 - liq.pgRaito!}}')
+        ],
+      ),
+    );
+  }
+}
+
+class LiqCard extends StatelessWidget {
   final String cardTitle;
   final String flavorHint;
   final String nicotineHint;
   final String pgHint;
   final String vgHint;
-  final Color? iconColor;
+  final Icon icon;
   final double? amountHint;
 
-  const LiquidCard({
+  const LiqCard({
     Key? key,
     required this.cardTitle,
     required this.flavorHint,
     required this.nicotineHint,
     required this.pgHint,
     required this.vgHint,
-    this.iconColor,
+    required this.icon,
     this.amountHint,
   }) : super(key: key);
 
@@ -227,8 +301,8 @@ class LiquidCard extends StatelessWidget {
           dense: true,
           contentPadding: const EdgeInsets.all(12),
           isThreeLine: true,
-          title: LiquidCardTitle(iconColor: iconColor, cardTitle: cardTitle),
-          subtitle: LiquidCardContents(
+          title: LiqCardTitle(icon: icon, cardTitle: cardTitle),
+          subtitle: LiqCardContents(
             flavorHint: flavorHint,
             nicotineHint: nicotineHint,
             pgHint: pgHint,
@@ -241,8 +315,8 @@ class LiquidCard extends StatelessWidget {
   }
 }
 
-class LiquidCardContents extends StatelessWidget {
-  const LiquidCardContents({
+class LiqCardContents extends StatelessWidget {
+  const LiqCardContents({
     Key? key,
     required this.flavorHint,
     required this.nicotineHint,
@@ -280,7 +354,7 @@ class LiquidCardContents extends StatelessWidget {
                 child: TextField(
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(),
-                    labelText: 'Nicotine/%',
+                    labelText: '* Nicotine/%',
                     hintText: nicotineHint,
                   ),
                 ),
@@ -312,27 +386,38 @@ class LiquidCardContents extends StatelessWidget {
   }
 }
 
-class LiquidCardTitle extends StatelessWidget {
-  const LiquidCardTitle({
+class LiqCardTitle extends StatelessWidget {
+  const LiqCardTitle({
     Key? key,
-    required this.iconColor,
     required this.cardTitle,
+    required this.icon,
+    this.titleStyle,
   }) : super(key: key);
 
-  final Color? iconColor;
   final String cardTitle;
+  final Icon icon;
+  final TextStyle? titleStyle;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(Icons.water_drop, color: iconColor),
-        Text(cardTitle),
+        icon,
+        Text(
+          cardTitle,
+          style: titleStyle,
+        ),
         const Spacer(),
         TextButton(
           onPressed: () {},
+          style: ButtonStyle(
+            padding: MaterialStateProperty.all(const EdgeInsets.all(4)),
+            minimumSize: MaterialStateProperty.all(Size.zero),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
           child: const Text('保存'),
         ),
+        HelpButton(onPressed: () {}),
       ],
     );
   }

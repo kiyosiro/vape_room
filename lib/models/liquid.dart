@@ -4,6 +4,7 @@ class MixedLiquid {
   Liquid liqB;
   double amount;
   double nicoRaito;
+  double? pgRaito;
 
   MixedLiquid({
     required this.name,
@@ -11,6 +12,7 @@ class MixedLiquid {
     required this.liqB,
     required this.amount,
     required this.nicoRaito,
+    this.pgRaito,
   });
 
   getLiqAAmount() {
@@ -40,4 +42,17 @@ class Liquid {
       'vgRatio': vgRatio,
     };
   }
+}
+
+getGoastLiq() {
+  return Liquid(name: 'goast liq', nicoRatio: 10);
+}
+
+getGoastMixedLiq() {
+  return MixedLiquid(
+      name: 'Goast mixde',
+      liqA: getGoastLiq(),
+      liqB: getGoastLiq(),
+      amount: 200,
+      nicoRaito: 15);
 }
