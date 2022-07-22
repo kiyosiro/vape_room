@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:vape_room/pages/archive_page.dart';
+import 'package:vape_room/pages/mix_page.dart';
+import 'Recipe_Book_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.appName}) : super(key: key);
@@ -11,35 +12,41 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool isAlreadyMix = true;
+  int _selectedIndex = 0;
+
+  List<Widget> pages = <Widget>[
+    const MixPage(),
+    const RecipeBookPage(),
+    const RecipeBookPage(),
+  ];
+
+  void _onNaviItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              widget.appName,
-              style: Theme.of(context).textTheme.headline3,
-            ),
-            ElevatedButton(
-              onPressed: () {},
-              child: const Text('new'),
-            ),
-            ElevatedButton(
-              onPressed: isAlreadyMix == false
-                  ? null
-                  : () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const ArchivePage()));
-                    },
-              child: const Text('archive'),
-            )
-          ],
-        ),
+      body: pages[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onNaviItemTapped,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.vaccines),
+            label: 'Mix',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.import_contacts),
+            label: 'Myレシピ',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_bag),
+            label: 'Items',
+          )
+        ],
       ),
     );
   }
