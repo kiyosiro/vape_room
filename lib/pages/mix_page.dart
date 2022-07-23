@@ -56,13 +56,22 @@ class _MixPageState extends State<MixPage> {
   }
 }
 
-class TabBarViewA extends StatelessWidget {
+class TabBarViewA extends StatefulWidget {
   const TabBarViewA({
     Key? key,
   }) : super(key: key);
 
   @override
+  State<TabBarViewA> createState() => _TabBarViewAState();
+}
+
+class _TabBarViewAState extends State<TabBarViewA> {
+  @override
   Widget build(BuildContext context) {
+    final firstNicoController = TextEditingController();
+    final secondNicoController = TextEditingController();
+    final targetAmountController = TextEditingController();
+// TODO: Mixed Liquidプロパイダへ上記３つの値を渡してresult liquidsを取得する
     final Liquid resultLiq = goastLiqMixed;
 
     return ListView(
@@ -74,44 +83,48 @@ class TabBarViewA extends StatelessWidget {
               '空の詰め替えボトルに２つのリキッドを混ぜ合わせて入れる場合のそれぞれのリキッドの必要な量を計算します。作成したい容量とニコチン濃度が決まっている必要があります。'),
           subtitle: Text('* 必須項目'),
         ),
-        const Padding(
-          padding: EdgeInsets.all(8.0),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
           child: Card(
             child: ListTile(
               dense: true,
-              contentPadding: EdgeInsets.all(12),
-              title: LiqCardTitle(
+              contentPadding: const EdgeInsets.all(12),
+              title: const LiqCardTitle(
                 cardTitle: '作成したいリキッド',
                 icon: Icon(
                   Icons.science,
                   color: Colors.purple,
                 ),
               ),
-              subtitle: AmoutAndNicoFields(),
+              subtitle: AmoutAndNicoFields(
+                targetAmount: targetAmountController,
+              ),
             ),
           ),
         ),
-        const LiqCard(
+        LiqCard(
           cardTitle: 'First Liquid',
           flavorHint: 'ex) peach flavor',
           nicotineHint: '0',
           pgHint: '70',
           vgHint: '30',
-          icon: Icon(
+          icon: const Icon(
             Icons.water_drop,
             color: Colors.red,
           ),
+          nicoController: firstNicoController,
         ),
-        const LiqCard(
+        LiqCard(
           cardTitle: 'Second Liquid',
           flavorHint: 'ex) nicotin liquid',
           nicotineHint: '10',
           pgHint: '50',
           vgHint: '50',
-          icon: Icon(
+          icon: const Icon(
             Icons.water_drop,
             color: Colors.blue,
           ),
+          nicoController: secondNicoController,
         ),
         ResultCard(resultLiq: resultLiq)
       ],
@@ -189,25 +202,27 @@ class ResultCard extends StatelessWidget {
 }
 
 class AmoutAndNicoFields extends StatelessWidget {
-  const AmoutAndNicoFields({
-    Key? key,
-  }) : super(key: key);
+  const AmoutAndNicoFields({Key? key, required this.targetAmount})
+      : super(key: key);
+
+  final TextEditingController targetAmount;
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: const [
+      children: [
         Flexible(
           child: TextField(
-            decoration: InputDecoration(
+            controller: targetAmount,
+            decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: '* 容量/ml',
               hintText: '200',
             ),
           ),
         ),
-        SizedBox(width: 8),
-        Flexible(
+        const SizedBox(width: 8),
+        const Flexible(
           child: TextField(
             decoration: InputDecoration(
               border: OutlineInputBorder(),
@@ -221,14 +236,25 @@ class AmoutAndNicoFields extends StatelessWidget {
   }
 }
 
-class TabBarViewB extends StatelessWidget {
+class TabBarViewB extends StatefulWidget {
   const TabBarViewB({
     Key? key,
   }) : super(key: key);
 
   @override
+  State<TabBarViewB> createState() => _TabBarViewBState();
+}
+
+class _TabBarViewBState extends State<TabBarViewB> {
+  final pouringNicoController = TextEditingController();
+  final originNicoController = TextEditingController();
+  final originAmountController = TextEditingController();
+// TODO: Mixed Liquidプロパイダへ上記３つの値を渡してresult liquidsを取得する
+
+  final Liquid resultLiq = goastLiqMixed;
+
+  @override
   Widget build(BuildContext context) {
-    final Liquid resultLiq = goastLiqMixed;
     return ListView(children: [
       const ListTile(
         dense: true,
@@ -260,28 +286,31 @@ class TabBarViewB extends StatelessWidget {
           ),
         ),
       ),
-      const LiqCard(
+      LiqCard(
         cardTitle: '注入するリキッド',
         flavorHint: 'nicotin liquid',
         nicotineHint: '10',
         pgHint: '70',
         vgHint: '30',
-        icon: Icon(
+        icon: const Icon(
           Icons.colorize,
           color: Colors.red,
         ),
+        nicoController: pouringNicoController,
       ),
-      const LiqCard(
+      LiqCard(
         cardTitle: 'ボトルに入っているリキッド',
         flavorHint: 'peach liquid',
         nicotineHint: '0',
         pgHint: '50',
         vgHint: '50',
         amountHint: 200,
-        icon: Icon(
+        icon: const Icon(
           Icons.local_drink,
           color: Colors.blue,
         ),
+        nicoController: originNicoController,
+        amountController: originAmountController,
       ),
       const Divider(),
       ResultCard(resultLiq: resultLiq)
@@ -343,6 +372,8 @@ class LiqCard extends StatelessWidget {
   final String vgHint;
   final Icon icon;
   final double? amountHint;
+  final TextEditingController nicoController;
+  final TextEditingController? amountController;
 
   const LiqCard({
     Key? key,
@@ -352,6 +383,8 @@ class LiqCard extends StatelessWidget {
     required this.pgHint,
     required this.vgHint,
     required this.icon,
+    required this.nicoController,
+    this.amountController,
     this.amountHint,
   }) : super(key: key);
 
@@ -371,6 +404,8 @@ class LiqCard extends StatelessWidget {
             pgHint: pgHint,
             vgHint: vgHint,
             amountHint: amountHint,
+            nicoController: nicoController,
+            amountController: amountController,
           ),
         ),
       ),
@@ -385,6 +420,8 @@ class LiqCardContents extends StatelessWidget {
     required this.nicotineHint,
     required this.pgHint,
     required this.vgHint,
+    required this.nicoController,
+    this.amountController,
     this.amountHint,
   }) : super(key: key);
 
@@ -393,6 +430,8 @@ class LiqCardContents extends StatelessWidget {
   final String pgHint;
   final String vgHint;
   final double? amountHint;
+  final TextEditingController nicoController;
+  final TextEditingController? amountController;
 
   @override
   Widget build(BuildContext context) {
@@ -408,13 +447,16 @@ class LiqCardContents extends StatelessWidget {
             ),
           ),
         ),
-        if (amountHint != null) const AmoutAndNicoFields(),
-        if (amountHint != null) const SizedBox(height: 8),
+        if (amountHint != null && amountController != null)
+          AmoutAndNicoFields(targetAmount: amountController!),
+        if (amountHint != null && amountController != null)
+          const SizedBox(height: 8),
         Row(
           children: [
             if (amountHint == null)
               Flexible(
                 child: TextField(
+                  controller: nicoController,
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(),
                     labelText: '* Nicotine/%',
