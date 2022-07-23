@@ -14,27 +14,40 @@ class Liquid {
     required this.nicoRaito,
     this.pgRaito,
   });
+}
 
-  getLiqAAmount(
-    num aRaito,
-    num bRaito,
-    num mixedAmount,
-    num mixedRaito,
-  ) {
-    //食塩濃度10％の食塩水Aと食塩濃度20％の食塩水Bを混ぜ合わせて
-    //食塩濃度15％の食塩水Cを200ml作る時のAの必要な容量を教えて。途中計算式も。
+calcAmountFromRaitoAndAmount(
+  num aRaito,
+  num bRaito,
+  num mixedAmount,
+  num mixedRaito,
+) {
+  // (aRaito * aAmount) + (bRaito * ( mixedAmount - aAmount)) = mixedRaito * mixedAmount;
+  //  (aRaito * aAmount) + bRaito * miedAmount - bRaito * aAmount = mixedRaito * mixedAmount;
+  // (aRaito * aAmount) - (bRaito * aAmount) = (mixedRaito * mixedAmount) - (bRaito * miedAmount);
+  // aAmount(aRaito - bRaito) = (mixedRaito * mixedAmount) - (bRaito * miedAmount);
+  // aAmount = ((mixedRaito * mixedAmount) - (bRaito * miedAmount))/(aRaito - bRaito);
 
-    //0.1x+0.2(200－x)=0.15・200
+  return ((mixedRaito * mixedAmount) - (bRaito * mixedAmount)) /
+      (aRaito - bRaito);
+}
 
-    // (aRaito * aAmount) + (bRaito * ( mixedAmount - aAmount)) = mixedRaito * mixedAmount;
-    //  (aRaito * aAmount) + bRaito * miedAmount - bRaito * aAmount = mixedRaito * mixedAmount;
-    // (aRaito * aAmount) - (bRaito * aAmount) = (mixedRaito * mixedAmount) - (bRaito * miedAmount);
-    // aAmount(aRaito - bRaito) = (mixedRaito * mixedAmount) - (bRaito * miedAmount);
-    // aAmount = ((mixedRaito * mixedAmount) - (bRaito * miedAmount))/(aRaito - bRaito);
+calcPouringAmountfromRaito(
+  num mixedRaito,
+  num pouringRaito,
+  num originAmount,
+  num originRaito,
+) {
+  // (pouringRaito * pouringAmount) + (originRaito * originAmount) = mixedRaito * (pouringAmount + originAmount)
+  // (pouringRaito * pouringAmount) = mixedRaito * (pouringAmount + originAmount) - (originRaito * originAmount)
+  // (pouringRaito * pouringAmount) = (mixedRaito * pouringAmount) + (mixedRaito * originAmount) - (originRaito * originAmount)
+  // (pouringRaito * pouringAmount) - (mixedRaito * pouringAmount) = (mixedRaito * originAmount) - (originRaito * originAmount)
+  // pouringAmount * (PouringRaito - mixedRaito) = (mixedRaito * originAmount) - (originRaito * originAmount)
+  // pouringAmount * (PouringRaito - mixedRaito) = originAmount(mixedRaito - originRaito)
+  // pouringAmount = originAmount(mixedRaito - originRaito) /(PouringRaito - mixedRaito)
 
-    return ((mixedRaito * mixedAmount) - (bRaito * mixedAmount)) /
-        (aRaito - bRaito);
-  }
+  return (originAmount * (mixedRaito - originRaito)) /
+      (pouringRaito - mixedRaito);
 }
 
 final Liquid goastLiqMixed = Liquid(
