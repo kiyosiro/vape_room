@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:vape_room/models/liquid.dart';
 import 'package:vape_room/widgets/help_button.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
-class MixPage extends StatefulWidget {
+class MixPage extends HookConsumerWidget {
   const MixPage({Key? key}) : super(key: key);
 
   @override
-  State<MixPage> createState() => _MixPageState();
-}
-
-class _MixPageState extends State<MixPage> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -56,21 +53,14 @@ class _MixPageState extends State<MixPage> {
   }
 }
 
-class TabBarViewA extends StatefulWidget {
-  const TabBarViewA({
-    Key? key,
-  }) : super(key: key);
+class TabBarViewA extends HookConsumerWidget {
+  const TabBarViewA({Key? key}) : super(key: key);
 
   @override
-  State<TabBarViewA> createState() => _TabBarViewAState();
-}
-
-class _TabBarViewAState extends State<TabBarViewA> {
-  @override
-  Widget build(BuildContext context) {
-    final firstNicoController = TextEditingController();
-    final secondNicoController = TextEditingController();
-    final targetAmountController = TextEditingController();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final firstNicoController = useTextEditingController();
+    final secondNicoController = useTextEditingController();
+    final targetAmountController = useTextEditingController();
 // TODO: Mixed Liquidプロパイダへ上記３つの値を渡してresult liquidsを取得する
     final Liquid resultLiq = goastLiqMixed;
 
@@ -96,8 +86,11 @@ class _TabBarViewAState extends State<TabBarViewA> {
                   color: Colors.purple,
                 ),
               ),
-              subtitle: AmoutAndNicoFields(
-                targetAmount: targetAmountController,
+              subtitle: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: AmoutAndNicoFields(
+                  targetAmount: targetAmountController,
+                ),
               ),
             ),
           ),
@@ -236,25 +229,17 @@ class AmoutAndNicoFields extends StatelessWidget {
   }
 }
 
-class TabBarViewB extends StatefulWidget {
-  const TabBarViewB({
-    Key? key,
-  }) : super(key: key);
+class TabBarViewB extends HookConsumerWidget {
+  const TabBarViewB({Key? key}) : super(key: key);
 
   @override
-  State<TabBarViewB> createState() => _TabBarViewBState();
-}
-
-class _TabBarViewBState extends State<TabBarViewB> {
-  final pouringNicoController = TextEditingController();
-  final originNicoController = TextEditingController();
-  final originAmountController = TextEditingController();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final pouringNicoController = useTextEditingController();
+    final originNicoController = useTextEditingController();
+    final originAmountController = useTextEditingController();
 // TODO: Mixed Liquidプロパイダへ上記３つの値を渡してresult liquidsを取得する
 
-  final Liquid resultLiq = goastLiqMixed;
-
-  @override
-  Widget build(BuildContext context) {
+    final Liquid resultLiq = goastLiqMixed;
     return ListView(children: [
       const ListTile(
         dense: true,
