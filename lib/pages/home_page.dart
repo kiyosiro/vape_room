@@ -15,7 +15,7 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
   List<Widget> pages = <Widget>[
-    MixPage(),
+    const MixPage(),
     const RecipeBookPage(),
     const RecipeBookPage(),
   ];

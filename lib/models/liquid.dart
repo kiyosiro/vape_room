@@ -2,9 +2,9 @@ class Liquid {
   String? flavor;
   Liquid? liqA;
   Liquid? liqB;
-  double amount;
-  double nicoRaito;
-  double? pgRaito;
+  num amount;
+  num nicoRaito;
+  num? pgRaito;
 
   Liquid({
     this.flavor,
@@ -16,12 +16,12 @@ class Liquid {
   });
 }
 
-calcAmountFromRaitoAndAmount(
-  num aRaito,
-  num bRaito,
-  num mixedAmount,
-  num mixedRaito,
-) {
+calcAmountFromRaitoAndAmount({
+  required num aRaito,
+  required num bRaito,
+  required num mixedAmount,
+  required num mixedRaito,
+}) {
   // (aRaito * aAmount) + (bRaito * ( mixedAmount - aAmount)) = mixedRaito * mixedAmount;
   //  (aRaito * aAmount) + bRaito * miedAmount - bRaito * aAmount = mixedRaito * mixedAmount;
   // (aRaito * aAmount) - (bRaito * aAmount) = (mixedRaito * mixedAmount) - (bRaito * miedAmount);
@@ -32,12 +32,12 @@ calcAmountFromRaitoAndAmount(
       (aRaito - bRaito);
 }
 
-calcPouringAmountfromRaito(
-  num mixedRaito,
-  num pouringRaito,
-  num originAmount,
-  num originRaito,
-) {
+calcPouringAmountfromRaito({
+  required num mixedRaito,
+  required num pouringRaito,
+  required num originAmount,
+  required num originRaito,
+}) {
   // (pouringRaito * pouringAmount) + (originRaito * originAmount) = mixedRaito * (pouringAmount + originAmount)
   // (pouringRaito * pouringAmount) = mixedRaito * (pouringAmount + originAmount) - (originRaito * originAmount)
   // (pouringRaito * pouringAmount) = (mixedRaito * pouringAmount) + (mixedRaito * originAmount) - (originRaito * originAmount)
@@ -48,6 +48,60 @@ calcPouringAmountfromRaito(
 
   return (originAmount * (mixedRaito - originRaito)) /
       (pouringRaito - mixedRaito);
+}
+
+calcMixedPgRaito({
+  required num aPgRaito,
+  required num bPgRaito,
+  required num aAmount,
+  required num bAmount,
+}) {
+  // (aAmount + bAmount) * mixedRaito = (aAmount * aPgRaito) + (bAmount * bPgRaito)
+  // mixedRaito = ((aAmount * aPgRaito) + (bAmount * bPgRaito) )/(aAmount + bAmount)
+  return ((aAmount * aPgRaito) + (bAmount * bPgRaito)) / (aAmount + bAmount);
+}
+
+mixAndGetLiqFromRaitoAndAmount(
+  num aRaito,
+  num bRaito,
+  num mixedAmount,
+  num mixedRaito,
+  String aFlavor,
+  String bFlavor,
+  num aPgRaito,
+  num bPgRaito,
+) {
+  final aAmount = calcAmountFromRaitoAndAmount(
+    aRaito: aRaito,
+    bRaito: bRaito,
+    mixedAmount: mixedAmount,
+    mixedRaito: mixedRaito,
+  );
+  final mixedPgRaito = calcMixedPgRaito(
+    aPgRaito: aPgRaito,
+    bPgRaito: bPgRaito,
+    aAmount: aAmount,
+    bAmount: (mixedAmount - aAmount),
+  );
+
+  return Liquid(
+    amount: mixedAmount,
+    nicoRaito: mixedRaito,
+    flavor: '$aFlavor & $bFlavor',
+    pgRaito: mixedPgRaito,
+    liqA: Liquid(
+      amount: aAmount,
+      nicoRaito: aRaito,
+      flavor: aFlavor,
+      pgRaito: aPgRaito,
+    ),
+    liqB: Liquid(
+      amount: (mixedAmount - aAmount),
+      nicoRaito: bRaito,
+      flavor: bFlavor,
+      pgRaito: bPgRaito,
+    ),
+  );
 }
 
 final Liquid goastLiqMixed = Liquid(
